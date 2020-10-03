@@ -2,7 +2,7 @@
     "bot":{
         "botName":"Blacklisted Word bot by Scrub",
         "botVer":"1.0",
-        "token":""
+        "token":"PUTTOKENHERE"
     },
     "prefix":">"
 }
