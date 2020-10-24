@@ -4,9 +4,11 @@ const config = require('./util/config.json')
 const blacklistFile = require('./util/blacklist.json')
 const bypassesFile = require('./util/bypasses.json')
 const responsesFile = require('./util/responses.json')
+const privConfig = require('./priv/privConfig')
 
 let client = new Discord.Client()
-client.login(config.bot.token)
+let token = config.bot.token.length < 1 ? privConfig.token : config.bot.token
+client.login(token)
 client.on('ready', ()=>{
     console.log(`${config.bot.botName} v${config.bot.botVer} running on\n${client.user.username}#${client.user.discriminator} is online!!!`)
 })
