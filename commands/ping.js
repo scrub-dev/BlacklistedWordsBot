@@ -3,7 +3,7 @@ module.exports = {
 	name: 'ping',
     description: 'Ping!',
     args: false,
-	execute(message,args) {
+	execute(client,message,args) {
         const pingEmbed = new Discord.MessageEmbed()
             .setTitle("Ping:")
             .setDescription("...Pinging")

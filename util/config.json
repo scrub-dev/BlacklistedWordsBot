@@ -4,5 +4,10 @@
         "botVer":"1.0",
         "token":""
     },
-    "prefix":">"
+    "prefix":">",
+    "database":{
+        "databaseName":"BWBDB",
+        "blacklistedWordsTbl":"blacklistedWordsTbl",
+        "bypassTbl":"bypassTbl"
+    }
 }
