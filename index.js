@@ -9,6 +9,7 @@ const privConfig = require('./priv/privConfig')
 
 const sqlite3 = require('sqlite3').verbose()
 const sqlite = require('sqlite')
+const { resolveCname } = require('dns')
 const dbConf = config.database
 var db;
 
@@ -22,7 +23,7 @@ client.login(token)
 try{
     if(!fs.existsSync(`./dbs/${dbConf.databaseName}.db`)){
         console.log(`[ INI ] Creating Database File`)
-        fs.writeFileSync(`./dbs/${dbConf.databaseName}.db`)
+        fs.writeFileSync(`./dbs/${dbConf.databaseName}.db`, "")
     }
     console.log(`[ INI ] Connected to Database: ./dbs/${dbConf.databaseName}.db`)
     db = new sqlite3.Database(`./dbs/${dbConf.databaseName}.db`)
@@ -33,7 +34,6 @@ try{
 }catch(error){
     console.log(`[ERROR] Database: ${error}`)
 }
-
 /**
  *         async () => open({
             filename: `./dbs/${config.database.blacklistedWords}.db`,
@@ -52,7 +52,17 @@ console.log(`[ DB ] ${row.word}` )
 
 
 client.on('ready', ()=>{
-    console.log(`[ INI ] ${config.bot.botName} v${config.bot.botVer} running on\n[ INI ] ${client.user.username}#${client.user.discriminator} is online!!!`)
+    console.log(`[ INI ] ${config.bot.botName} v${config.bot.botVer}\n[ INI ] ${client.user.username}#${client.user.discriminator} is online!!!`)
+    db.all(`SELECT * FROM ${dbConf.blacklistedWordsTbl}`, (err, rows) =>{
+        if(err) throw err;
+        if(rows.length == 0) console.log(`[ INI ] No Blacklisted words found`)
+        else console.log(`[ INI ] DB: ${rows.length} Blacklisted words detected`)
+    })
+    db.all(`SELECT * FROM ${dbConf.bypassTbl}`, (err, rows) =>{
+        if(err) throw err;
+        if(rows.length == 0) console.log(`[ INI ] No Bypasses found`)
+        else console.log(`[ INI ] DB: ${rows.length} Bypasses detected`)
+    })
 })
 
 //Load Commands
@@ -69,20 +79,23 @@ client.on('message', async message =>{
     if(message.author.bot) return;
     if(!message.content.startsWith(config.prefix)){
         let messageArr = message.content.toLowerCase().trim().split(/ +/)
-        if(messageArr.some(checkMessage)){
-            if(bypassCheck(message)) return
-            let response = responsesFile.responses[Math.floor(Math.random()*responsesFile.responses.length)]
-            message.delete({reason:"Word on blacklist used"})
-                .then(()=>{
-                    if(responsesFile.responseFlag) message.channel.send(`${message.member.user.username} ${response}`)
-                    else return
-                }).catch(console.error)
-        }
+        messageArr.forEach(x => checkMessage(x).then(flag => {
+            if(flag[Object.keys(flag)[0]]){
+                if(bypassCheck(message)) return
+                let response = responsesFile.responses[Math.floor(Math.random()*responsesFile.responses.length)]
+                message.delete({reason:"Word on blacklist used"})
+                    .then(()=>{
+                        if(responsesFile.responseFlag) message.channel.send(`${message.member.user.username} ${response}`)
+                        else return
+                    }).catch(console.error)
+            }
+        }))
     }
 
     let args = message.content.slice(config.prefix.length).trim().split(/ +/);
     let command = args[0]
     client.db = db
+    client.dbConf = dbConf
     if(!client.commands.has(command)) return
     try{
         if(!message.content.startsWith(config.prefix)) return
@@ -92,12 +105,19 @@ client.on('message', async message =>{
         message.channel.send('An Error has occured: Please check the console for more details')
     }
 })
-function checkMessage(message){
+async function checkMessage(wordSent){
     let flag = false
-    blacklistFile.words.forEach(element => {
+    /*blacklistFile.words.forEach(element => {
         if(message == element) flag = true
-    });
-    return flag
+    });*/
+    return new Promise(resolve => {
+        let query = `SELECT EXISTS (SELECT word FROM ${dbConf.blacklistedWordsTbl} WHERE word = ? LIMIT 1)`
+        db.get(query,[wordSent], (err, row) =>{
+            if(err) throw err;
+            flag = row[Object.keys(row)[0]] != 0 ? true : false
+            resolve({flag: flag})
+        })
+    })
 }
 function bypassCheck(message){
     let flag = false
