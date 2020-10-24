@@ -9,6 +9,10 @@
   "author": "Scrub",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.3.1"
+    "discord.js": "^12.3.1",
+    "sql-template-strings": "^2.2.2",
+    "sqlite": "^4.0.15",
+    "sqlite3": "^5.0.0",
+    "string-argv": "^0.3.1"
   }
 }

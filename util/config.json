@@ -2,7 +2,12 @@
     "bot":{
         "botName":"Blacklisted Word bot by Scrub",
         "botVer":"1.0",
-        "token":"PUTTOKENHERE"
+        "token":""
     },
-    "prefix":">"
+    "prefix":">",
+    "database":{
+        "databaseName":"BWBDB",
+        "blacklistedWordsTbl":"blacklistedWordsTbl",
+        "bypassTbl":"bypassTbl"
+    }
 }
