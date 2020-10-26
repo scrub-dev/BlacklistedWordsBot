@@ -4,17 +4,16 @@ const config = require('./util/config.json')
 const blacklistFile = require('./util/blacklist.json')
 const bypassesFile = require('./util/bypasses.json')
 const responsesFile = require('./util/responses.json')
-const privConfig = require('./priv/privConfig')
+const privConfig = require('./priv/privConfig.json')
 //const SQL = require ('sql-template-strings')
 
 const sqlite3 = require('sqlite3').verbose()
-const sqlite = require('sqlite')
-const { resolveCname } = require('dns')
+//const sqlite = require('sqlite')
 const dbConf = config.database
 var db;
 
 let client = new Discord.Client()
-let token = config.bot.token.length < 1 ? privConfig.token : config.bot.token
+let token = fs.existsSync('./priv/privConfig.json') ? privConfig.token : config.bot.token
 client.login(token)
 
 
