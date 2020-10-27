@@ -130,14 +130,10 @@ async function bypassCheck(message){
         }
         
     })
-    /*if(bypassesFile.channelBypass.includes(message.channel.id)) flag = true
-    if(bypassesFile.roleBypass.some(element => Array.from(message.member.roles.cache.map(roles => `${roles.id}`)).includes(element))) flag = true
-    if(bypassesFile.userBypass.includes(message.member.id))flag = true
-    return flag*/
 }
 
 setInterval(()=>{
     let activities = ["Trans Rights", "On the belong server"]
     let num = Math.floor(Math.random() * activities.length)
     client.user.setActivity(activities[num],{type: "PLAYING"})
-}, 1000 * 60 * 5) //(5 Minutes)
+}, 1000 * 60 * 5)
