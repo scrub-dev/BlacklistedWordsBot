@@ -7,7 +7,7 @@ module.exports = {
         switch(args[1].toLowerCase()){
             case "word":
                 let wordTypeArray = ["DEFAULT", "DISCRIMINATION", "SEXUALCONTENT", "HOSTILILITY", "PROFANITY"]
-                let word = args[2].toLowerCase().replace(/[^A-Za-z0-9-]+/g,"")
+                let word = args[2].toLowerCase().replace(/[^A-Za-z0-9]+/g,"")
                 let wordType = args[3].toUpperCase()
                 let severity = parseInt(args[4])
 
