@@ -4,12 +4,14 @@ module.exports = {
     description: 'list current blacklisted words',
     args: true,
 	execute(client,message,args) {
-        client.db.all(`SELECT * FROM ${client.dbConf.blacklistedWordsTbl}`, (err, rows) =>{
-            if(rows.length == 0) console.log(`[ DB ] No Blacklisted words found`)
+        let wordsFlag = args[1] === "words" ? true : false
+        let listTable = args[1] === "words" ? client.dbConf.blacklistedWordsTbl : client.dbConf.bypassTbl
+        client.db.all(`SELECT * FROM ${listTable}`, (err, rows) =>{
+            if(rows.length == 0) console.log(`[ DB ] No Blacklisted words/bypasses found`)
             if(err) throw err;
-            console.log(`[ DB ] Blacklist count: ${rows.length}`)
             rows.forEach((row) => {
-                console.log(`[ DB ] ${row.word}` )
+                if(wordsFlag) console.log(`[ DB ] ${row.word}` )
+                else console.log(`[ DB ] ${row.id} | ${row.bypassType}` )
             })
         })
     }
