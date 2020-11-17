@@ -1,25 +1,25 @@
 const Discord = require('discord.js')
 const fs = require('fs')
 const config = require('./util/config.json')
-const blacklistFile = require('./util/blacklist.json')
-const bypassesFile = require('./util/bypasses.json')
 const responsesFile = require('./util/responses.json')
 const privConfig = require('./priv/privConfig.json')
-const { exit } = require('process')
-//const SQL = require ('sql-template-strings')
-
 const sqlite3 = require('sqlite3').verbose()
-//const sqlite = require('sqlite')
 const dbConf = config.database
 var db;
-
+require('dotenv').config()
+/**
+ * TODO:
+ * create a server settings json file to store persistant data for server (Could just include in config.json)
+ *  > Server moderation level for all blacklistTypes
+ *  > If the server wants responses when the message is removed by the bot
+ *  > If the server wants to audit log every message deletion
+ * implement a json file for the setActivity Function
+ * implement word severity check agaist server settings table
+ */
 let client = new Discord.Client()
-let token = fs.existsSync('./priv/privConfig.json') ? privConfig.token : config.bot.token
+let token = process.env.BOTAPIKEY || config.bot.token
 client.login(token)
-
-
-
-//Database Stuff
+//Load / Create / Connect to database
 try{
     if(!fs.existsSync(`./dbs/${dbConf.databaseName}.db`)){
         console.log(`[ INI ] Creating Database File`)
@@ -34,7 +34,15 @@ try{
 }catch(error){
     console.log(`[ERROR] Database: ${error}`)
 }
-
+//Load Commands
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+for(let i = 0; i < commandFiles.length; i++){
+    let file = commandFiles[i]
+    const command = require(`./commands/${file}`)
+    client.commands.set(command.name, command)
+    console.log(`[ INI ] Loading Command (${i + 1}/${commandFiles.length}) - ${file}`)
+}
 client.on('ready', ()=>{
     console.log(`[ INI ] ${config.bot.botName} v${config.bot.botVer}\n[ INI ] ${client.user.username}#${client.user.discriminator} is online!!!`)
     db.all(`SELECT * FROM ${dbConf.blacklistedWordsTbl}`, (err, rows) =>{
@@ -48,23 +56,12 @@ client.on('ready', ()=>{
         else console.log(`[ INI ] DB: ${rows.length} Bypasses detected`)
     })
 })
-
-//Load Commands
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
-for(let i = 0; i < commandFiles.length; i++){
-    let file = commandFiles[i]
-    const command = require(`./commands/${file}`)
-    client.commands.set(command.name, command)
-    console.log(`[ INI ] Loading Command (${i + 1}/${commandFiles.length}) - ${file}`)
-}
-
 client.on('message', async message =>{
     if(message.author.bot) return;
     await checkMessage(message).then(flag => {
         if(!flag) return;
         deleteMessage(message, "Blacklisted Word")
-        message.channel.send("Bad word")
+        message.channel.send(randomArrayReturn(responsesFile.responses))
     })
     if(!message.content.startsWith(confid.prefix)) return;
     let args = message.content.slice(config.prefix.length).trim().split(/ +/);
@@ -110,7 +107,6 @@ async function deleteMessage(message, reason){
     message.delete({reason: reason})
     .catch(console.error);
 }
-
 async function bypassCheck(message){
     return new Promise(resolve =>{
         let flag = false;
@@ -131,7 +127,9 @@ async function bypassCheck(message){
         
     })
 }
-
+async function randomArrayReturn(resArr){
+    return resArr[Math.floor(Math.random()*resArr.length)]
+}
 setInterval(()=>{
     let activities = ["Trans Rights", "On the belong server"]
     let num = Math.floor(Math.random() * activities.length)
