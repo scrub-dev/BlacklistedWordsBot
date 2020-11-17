@@ -1,4 +1,3 @@
 #Ignore my token for the testing bot
-/priv/*
 /dbs/*
 .env

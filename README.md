@@ -22,3 +22,24 @@ You might not want  everyone to be affected by this bot. In the `config.json` th
 * Channel bypass: turns off the checks for any channel in the channelBypass array.
 
 These all work on ID's of each type and not the names!
+
+## To Note:
+The bot is  still in a developmental phase and does currently not have all the safety  checks or permission checks in place to be used on community servers. As such any user can add a bypass or blacklisted word.
+
+## To Do:
+* Add the functionality required to be able to removed a bypass or blacklisted word
+* Create saftey and permission checks for  the ability to use commands such as
+    * Add Bypass
+    * Remove Bypass
+    * Add Word
+    * Remove Word
+* Create a server settings json file to store persistant data for server (Could just   include in config.json)
+* Server moderation level for all blacklistTypes
+    * If the server wants responses when the message is removed by the bot
+    * If the server wants to audit log every message deletion
+* Implement a better way to store data for the setActivity Function
+* Implement word severity check agaist server settings table
+* Possibly add more functionality towards making it a full feature generic discord bot
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
