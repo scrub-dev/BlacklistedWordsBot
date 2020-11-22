@@ -2,7 +2,6 @@ const Discord = require('discord.js')
 const fs = require('fs')
 const config = require('./util/config.json')
 const responsesFile = require('./util/responses.json')
-const privConfig = require('./priv/privConfig.json')
 const sqlite3 = require('sqlite3').verbose()
 const dbConf = config.database
 var db;
