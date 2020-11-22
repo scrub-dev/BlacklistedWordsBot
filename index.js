@@ -62,7 +62,7 @@ client.on('message', async message =>{
         deleteMessage(message, "Blacklisted Word")
         message.channel.send(randomArrayReturn(responsesFile.responses))
     })
-    if(!message.content.startsWith(confid.prefix)) return;
+    if(!message.content.startsWith(config.prefix)) return;
     let args = message.content.slice(config.prefix.length).trim().split(/ +/);
     let command = args[0]
     client.db = db
