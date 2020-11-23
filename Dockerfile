@@ -10,6 +10,6 @@ RUN npm install
 
 COPY . /bot
 
-ENV TOKEN=NzQzNzYxODE5MTgwNzI4MzIx.XzZYLA.X24K_n0nbGI6dcRRj984idHJe7w
+ENV TOKEN=YOURTOKENHERE
 
 CMD ["pm2-runtime", "index.js"]
