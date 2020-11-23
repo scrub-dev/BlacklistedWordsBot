@@ -16,7 +16,7 @@ require('dotenv').config()
  * implement word severity check agaist server settings table
  */
 let client = new Discord.Client()
-let token = process.env.BOTAPIKEY || config.bot.token
+let token = process.env.TOKEN || config.bot.token
 client.login(token)
 //Load / Create / Connect to database
 try{

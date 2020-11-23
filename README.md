@@ -15,13 +15,23 @@ Contained in this version is a Json file (`blacklist.json`) with an array, fill 
 `nodemon index.js`
 `pm2 start index.js --watch`
 
-## Allowing bypasses
+## Allowing bypasses:
 You might not want  everyone to be affected by this bot. In the `config.json` there are 3 methods for bypassing its blacklist check. All work off ID's.
 * User bypass: checks the user id against the userBypass array.
 * Role bypass: checks the users roles against the roleBypass array.
 * Channel bypass: turns off the checks for any channel in the channelBypass array.
 
 These all work on ID's of each type and not the names!
+
+## Docker:
+If you want to run the bot in a Docker Container, you now can! Included is the dockerfile to create an image of this bot. Before building the image, please open the file and set your bots token here 
+`ENV TOKEN=YOURTOKENHERE` 
+Or can also set the token as a variable when you environment variable when you run the image. 
+
+To build the bot image simply type in the root directory of the repo
+`docker build --tag blacklisted_word_bot .`
+then you can either run it through command line or create a container or
+Docker Desktop.
 
 ## To Note:
 The bot is  still in a developmental phase and does currently not have all the safety  checks or permission checks in place to be used on community servers. As such any user can add a bypass or blacklisted word.
