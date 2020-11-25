@@ -8,6 +8,7 @@
     "database":{
         "databaseName":"BWBDB",
         "blacklistedWordsTbl":"blacklistedWordsTbl",
-        "bypassTbl":"bypassTbl"
+        "bypassTbl":"bypassTbl",
+        "permissionTbl": "permissionTbl"
     }
 }

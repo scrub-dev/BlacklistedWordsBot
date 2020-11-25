@@ -27,9 +27,16 @@ try{
     console.log(`[ INI ] Connected to Database: ./dbs/${dbConf.databaseName}.db`)
     db = new sqlite3.Database(`./dbs/${dbConf.databaseName}.db`)
     db.exec(`CREATE TABLE IF NOT EXISTS ${dbConf.blacklistedWordsTbl} (word TEXT, blacklistType TEXT, severityLevel INT)`)
-    db.exec(`CREATE TABLE IF NOT EXISTS ${dbConf.bypassTbl} (id INT, bypassType TEXT)`)
+    db.exec(`CREATE TABLE IF NOT EXISTS ${dbConf.bypassTbl} (id TEXT, bypassType TEXT)`)
+    db.exec(`CREATE TABLE IF NOT EXISTS ${dbConf.permissionTbl} (id TEXT, permissionLevel INT)`)
     //word: word you want to be blocked blaclistType: "DEFAULT" | "DISCRIMINATION" | "SEXUALCONTENT" | "HOSTILILITY" | "PROFANITY" severityLevel: 0-3 | How much filtering.
     //id: channelID | roleID | userID bypassType: "USER" | "CHANNEL" | "ROLE".
+    /**
+     * Permission Levels:
+     * 1: Add and remove / update words from blacklist
+     * 2: Add and remove / update bypasses
+     * 3: Add and remove / update permissions
+     */
 }catch(error){
     console.log(`[ERROR] Database: ${error}`)
 }
@@ -53,6 +60,11 @@ client.on('ready', ()=>{
         if(err) throw err;
         if(rows.length == 0) console.log(`[ INI ] No Bypasses found`)
         else console.log(`[ INI ] DB: ${rows.length} Bypasses detected`)
+    })
+    db.all(`SELECT * FROM ${dbConf.permissionTbl}`, (err, rows) => {
+        if(err) throw err;
+        if(rows.length !== 0) console.log(`[ INI ] DB: ${rows.length} Bot permissions found`)
+        else console.log(`[ INI ] No permissions detected`)
     })
 })
 client.on('message', async message =>{
@@ -101,7 +113,7 @@ async function checkBlacklist(wordArr){
             })
         }
     })
-}
+} 
 async function deleteMessage(message, reason){
     message.delete({reason: reason})
     .catch(console.error);
@@ -117,7 +129,7 @@ async function bypassCheck(message){
         })
         for(let i= 0; i < idArray.length; i++){
             let query = `SELECT EXISTS (SELECT id FROM ${dbConf.bypassTbl} WHERE id = ? LIMIT 1)`
-            db.get(query,[parseInt(idArray[i])], (err,row) =>{
+            db.get(query,[idArray[i]], (err,row) =>{
                 if(err) throw err;
                 if(row[Object.keys(row)[0]] != 0) flag = true
                 if(i == idArray.length - 1) resolve(flag)
@@ -126,7 +138,8 @@ async function bypassCheck(message){
         
     })
 }
-async function randomArrayReturn(resArr){
+function randomArrayReturn(resArr){
+
     return resArr[Math.floor(Math.random()*resArr.length)]
 }
 setInterval(()=>{
