@@ -1,5 +1,9 @@
 
 # Change Log:
+## Version 1.5.0
+* Moved from sqlite3 library to better-sqlite
+* Refactored codebase to allow for better-sqlite to work
+* Moderator permissions fully intergrated now
 ## Version 1.4.0
 * Added Read functionality
     * Command `{prefix} list [words | bypasses | permissions]`

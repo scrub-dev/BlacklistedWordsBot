@@ -18,17 +18,19 @@ module.exports = {
                 if(severity > 3 || severity < 1 || isNaN(severity)) return message.channel.send("Invalid Word Severity filter (Must be between either 1, 2 or 3")
 
                 if(!checkPermission(client,message, 1)) return noPermissionMessage(message)
-                let query = `SELECT EXISTS (SELECT word FROM ${client.dbConf.blacklistedWordsTbl} WHERE word = ? LIMIT 1)`
-                client.db.get(query, [word], (err, row) =>{
-                    if(err) throw err;
-                    if(row[Object.keys(row)[0]] !== 0) return message.channel.send("Word already in blacklist database")
-                    let addQuery = `INSERT INTO ${client.dbConf.blacklistedWordsTbl} VALUES (?, ?, ?)`
-                    client.db.run(addQuery,[word,wordType,severity], (err) =>{
-                        if(err) console.log(`[ DB ]` + err)
-                        console.log(`[ BOT ] DB ADD: WORD ${word} ${wordType} ${severity}`)
-                        successMessage(message, `Blacklisted word added`)
-                    })
+                let existquery = `SELECT EXISTS (SELECT word FROM ${client.dbConf.blacklistedWordsTbl} WHERE word = ? LIMIT 1)`
+                let existstmt = client.db.prepare(existquery)
+                let existres = existstmt.get(word)
+                if(existres[Object.keys(existres)[0]] !== 0) return userError(message, "Word alread in blacklist database")
+
+                let addQuery = `INSERT INTO ${client.dbConf.blacklistedWordsTbl} VALUES (:word, :wordType, :wordSeverity)`
+                let addStmt = client.db.prepare(addQuery)
+                addStmt.run({
+                    word: word,
+                    wordType: wordType,
+                    wordSeverity: severity
                 })
+                successMessage(message, `Blacklisted word added`)
                 break;
             case "bypass":
                 if(args.length < 4) return message.channel.send(`Incorrect amount of arguments (add bypass id type)`)
@@ -44,17 +46,17 @@ module.exports = {
                 if(!checkPermission(client,message, 2)) return noPermissionMessage(message)
 
                 let bypassExistsQuery = `SELECT EXISTS (SELECT id FROM ${client.dbConf.bypassTbl} WHERE id = ? LIMIT 1)`
-                client.db.get(bypassExistsQuery, [id], (err,row) =>{
-                    if(err) throw err
-                    console.log(row)
-                    if(row[Object.keys(row)[0]] !== 0) return message.channel.send(`Bypass already exists`)
-                    let addBypassQuery = `INSERT INTO ${client.dbConf.bypassTbl} VALUES (?,?)`
-                    client.db.run(addBypassQuery, [id, bypassType], (err) => {
-                        if(err) throw err;
-                        console.log(`[ BOT ] DB ADD: BYPASS ${bypassType} ${id}`)
-                        successMessage(message, `${args[3]} Bypass added for: ${id}`)
-                    })
+                let bypassExistsStmt = client.db.prepare(bypassExistsQuery)
+                let bypassExistsRes = bypassExistsStmt.get(id)
+                if(bypassExistsRes[Objects.keys(bypassExistsRes)[0]] !== 0) return message.channel.send(`Bypass already exists`)
+
+                let addBypassQuery = `INSERT INTO ${client.dbConf.bypassTbl} VALUES (:id,:bypassType)`
+                let addBypassStmt = client.db.prepare(addBypassQuery)
+                addBypassStmt.run({
+                    id: id,
+                    bypassType: bypassType
                 })
+                successMessage(message, `${args[3]} Bypass added for: ${id}`)
                 break;
             case "permission":
                 if(args.length < 4) return userError(message, `ncorrect amount of arguments (add permission id level)`)
@@ -69,17 +71,18 @@ module.exports = {
 
                 if(!checkPermission(client,message, 3)) return noPermissionMessage(message)
 
-                let permissionExistsQuery = `SELECT EXISTS (SELECT id FROM ${client.dbConf.permissionTbl} WHERE id = ? LIMIT 1)`
-                client.db.get(permissionExistsQuery,[permissionID], (err,row) => {
-                    if(err) throw err
-                    if(row[Object.keys(row)[0]] !== 0) return userError(message, `Permission already exists`)
-                    let addPermissionQuery = `INSERT INTO ${client.dbConf.permissionTbl} VALUES (?,?)`
-                    client.db.run(addPermissionQuery,[permissionID,permissionLevel], (err) => {
-                        if(err) throw err
-                        console.log(`[ BOT ] DB ADD: PERMISSIONS LEVEL: ${permissionLevel} ID: ${permissionID}`)
-                        successMessage(message, `Bot moderation level ${permissionLevel} added to ${client.users.cache.find(user => user.id === permissionID).username}`)
-                    })   
+                let permissionExistsQuery = `SELECT EXISTS (SELECT id FROM ${client.dbConf.permissionTbl} WHERE id = :id LIMIT 1)`
+                let permissionExistsStmt = client.db.prepare(permissionExistsQuery)
+                let permissionExistsRes = permissionExistsStmt.get({id: id})
+                if(permissionExistsRes[Object.keys(permissionExistsRes)[0]] !== 0) return userError(message, `Permission already exists`)
+
+                let addPermissionQuery = `INSERT INTO ${client.dbConf.permissionTbl} VALUES (:id,:level)`
+                let addPermissionStmt = client.db.prepare(addPermissionQuery)
+                addPermissionStmt.run({
+                    id: permissionID,
+                    level: permissionLevel
                 })
+                successMessage(message, `Bot moderation level ${permissionLevel} added to ${client.users.cache.find(user => user.id === permissionID).username}`)
                 break;
             default:
                 userError(message, "Argument not recognised, did you spell it correctly? (word | bypass | permission)")

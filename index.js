@@ -2,10 +2,11 @@ const Discord = require('discord.js')
 const fs = require('fs')
 const config = require('./util/config.json')
 const responsesFile = require('./util/responses.json')
-const sqlite3 = require('sqlite3').verbose()
+const Database = require('better-sqlite3')
 const dbConf = config.database
 var db;
-const { randomArrayReturn } = require('./util/utils.js')
+
+const { randomArrayReturn, getTableRowCount } = require('./util/utils.js')
 require('dotenv').config()
 /**
  * TODO:
@@ -29,7 +30,8 @@ try{
         fs.writeFileSync(`./dbs/${dbConf.databaseName}.db`, "")
     }
     console.log(`[ INI ] Connected to Database: ./dbs/${dbConf.databaseName}.db`)
-    db = new sqlite3.Database(`./dbs/${dbConf.databaseName}.db`)
+    db = new Database(`./dbs/${dbConf.databaseName}.db`)
+    db.pragma('journal_mode = WAL');
     db.exec(`CREATE TABLE IF NOT EXISTS ${dbConf.blacklistedWordsTbl} (word TEXT, blacklistType TEXT, severityLevel INT)`)
     db.exec(`CREATE TABLE IF NOT EXISTS ${dbConf.bypassTbl} (id TEXT, bypassType TEXT)`)
     db.exec(`CREATE TABLE IF NOT EXISTS ${dbConf.permissionTbl} (id TEXT, permissionLevel INT)`)
@@ -55,21 +57,21 @@ for(let i = 0; i < commandFiles.length; i++){
 }
 client.on('ready', ()=>{
     console.log(`[ INI ] ${config.bot.botName} v${config.bot.botVer}\n[ INI ] ${client.user.username}#${client.user.discriminator} is online!!!`)
-    db.all(`SELECT * FROM ${dbConf.blacklistedWordsTbl}`, (err, rows) =>{
-        if(err) throw err;
-        if(rows.length == 0) console.log(`[ INI ] No Blacklisted words found`)
-        else console.log(`[ INI ] DB: ${rows.length} Blacklisted words detected`)
-    })
-    db.all(`SELECT * FROM ${dbConf.bypassTbl}`, (err, rows) =>{
-        if(err) throw err;
-        if(rows.length == 0) console.log(`[ INI ] No Bypasses found`)
-        else console.log(`[ INI ] DB: ${rows.length} Bypasses detected`)
-    })
-    db.all(`SELECT * FROM ${dbConf.permissionTbl}`, (err, rows) => {
-        if(err) throw err;
-        if(rows.length !== 0) console.log(`[ INI ] DB: ${rows.length} Bot permissions found`)
-        else console.log(`[ INI ] No permissions detected`)
-    })
+    // let stmt_blacklistWordsCheck = db.prepare(`SELECT * FROM ${dbConf.blacklistedWordsTbl}`)
+    // let res_blacklistWordsCheck = stmt_blacklistWordsCheck.all()
+    // if(res_blacklistWordsCheck.length == 0) console.log(`[ INI ] No Blacklisted words found`)
+    // else console.log(`[ INI ] DB: ${res_blacklistWordsCheck.length} Blacklisted words detected`)
+    let blacklistedWordsRowCount = getTableRowCount(db, dbConf.blacklistedWordsTbl)
+    if(blacklistedWordsRowCount !== 0) console.log(`[ INI ] ${blacklistedWordsRowCount} Blacklisted words detected`)
+    else console.log(`[ INI ] No Blacklisted words found`)
+
+    let bypassesRowCount = getTableRowCount(db, dbConf.bypassTbl)
+    if(bypassesRowCount !== 0) console.log(`[ INI ] ${bypassesRowCount} Bypasses detected`)
+    else console.log(`[ INI ] No Bypasses found`)
+
+    let permissionsRowCount = getTableRowCount(db, dbConf.permissionTbl)
+    if(permissionsRowCount !== 0 ) console.log(`[ INI ] ${permissionsRowCount} Bot permissions found`)
+    else console.log(`[ INI ] No permissions detected`)
 })
 client.on('message', async message =>{
     if(message.author.bot) return;
@@ -107,16 +109,15 @@ async function checkMessage(message){
     })
 }
 async function checkBlacklist(wordArr){
-    return new Promise(resolve =>{
+    return new Promise(resolve => {
         let flag = false
-        for(let i= 0; i < wordArr.length; i++){
-            let query = `SELECT EXISTS (SELECT word FROM ${dbConf.blacklistedWordsTbl} WHERE word = ? LIMIT 1)`
-            db.get(query,[wordArr[i]], (err,row) =>{
-                if(err) throw err;
-                if(row[Object.keys(row)[0]] != 0) flag = true
-                if(i == wordArr.length - 1) resolve(flag)
-            })
-        }
+        wordArr.forEach((element, index) => {
+            let qry = `SELECT EXISTS (SELECT word FROM ${dbConf.blacklistedWordsTbl} WHERE word = :word LIMIT 1)`
+            let stmt = db.prepare(qry)
+            let res = stmt.get({word : element})
+            if(res[Object.keys(res)[0]] != 0) flag = true
+            if(index == wordArr.length - 1) resolve(flag)
+        })
     })
 } 
 async function deleteMessage(message, reason){
@@ -124,23 +125,21 @@ async function deleteMessage(message, reason){
     .catch(console.error);
 }
 async function bypassCheck(message){
-    return new Promise(resolve =>{
-        let flag = false;
+    return new Promise(resolve => {
+        let flag = false
         let idArray = []
         idArray.push(message.member.id)
         idArray.push(message.channel.id)
         Array.from(message.member.roles.cache.map(roles => `${roles.id}`)).forEach(element =>{
-            idArray.push(element)
+        idArray.push(element)
         })
-        for(let i= 0; i < idArray.length; i++){
-            let query = `SELECT EXISTS (SELECT id FROM ${dbConf.bypassTbl} WHERE id = ? LIMIT 1)`
-            db.get(query,[idArray[i]], (err,row) =>{
-                if(err) throw err;
-                if(row[Object.keys(row)[0]] != 0) flag = true
-                if(i == idArray.length - 1) resolve(flag)
-            })
-        }
-        
+        idArray.forEach((element, index) => {
+            let qry = `SELECT EXISTS (SELECT id FROM ${dbConf.bypassTbl} WHERE id = :id LIMIT 1)`
+            let stmt = db.prepare(qry)
+            let res = stmt.get({id: element})
+            if(res[Object.keys(res)[0]] != 0 ) flag = true
+            if(index == idArray.length - 1) resolve(flag)
+        })
     })
 }
 setInterval(()=>{

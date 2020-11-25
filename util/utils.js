@@ -2,13 +2,12 @@ const Discord = require("discord.js");
 
 module.exports.checkPermission = (client, message, level) => {
     if(message.member.hasPermission("ADMINISTRATOR")) return true;
-    let id = message.member.id
-    let permissionQuery = `SELECT id, permissionLevel FROM ${client.dbConf.permissionTbl} WHERE id  = ? LIMIT 1`
-    client.db.get(permissionQuery, [id], (err, row) => {
-        if(err) throw err;
-        if(!row.id) return false;
-        if(row.permissionLevel < level) return false;
-    })
+    let permissionQuery = `SELECT id, permissionLevel FROM ${client.dbConf.permissionTbl} WHERE id  = :id LIMIT 1`
+    let stmt = client.db.prepare(permissionQuery)
+    let res = stmt.get({id: message.member.id})
+    if(res == undefined) return false
+    let flag = (res.permissionLevel >= level)? true : false
+    return flag
 }
 
 module.exports. randomArrayReturn = (resArr) => {
@@ -22,7 +21,7 @@ module.exports.noPermissionMessage = (message) => {
 };
 module.exports.successMessage = (message, info) => {
     let embed = new Discord.MessageEmbed();
-    embed.setTitle('✅ Success! ✅').setDescription(`***Success!*** ${info}`).setColor("GREEEN");
+    embed.setTitle('✅ Success! ✅').setDescription(`***Success!*** ${info}`).setColor("GREEN");
     message.channel.send(embed)
 }
 module.exports.userError = (message, info) => {
@@ -44,13 +43,14 @@ module.exports.embedOutput = (message, title, description) => {
 module.exports.returnTable = async (client, table) => {
     return new Promise (resolve => {
         let qry = `SELECT * FROM ${table}`
-        client.db.all(qry, (err,rows) => {
-            if(err) throw err
-            if(rows.length == 0) resolve(["0 Results"])
-            else{
-                resolve(rows)
-            }
-        })
+        let stmt = client.db.prepare(qry)
+        let res = stmt.all()
+        resolve (res)
     })
+}
 
+module.exports.getTableRowCount = (db, table) => {
+    let stmt = db.prepare(`SELECT * FROM ${table}`)
+    let res = stmt.all()
+    return res.length
 }
