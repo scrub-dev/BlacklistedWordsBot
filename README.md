@@ -1,6 +1,6 @@
-# Discord Blacklisted Words Bot
+![Logo](/assets/name.png)
 ---
-[![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.0-green) ![loc](https://img.shields.io/tokei/lines/github/Scott-Donaldson/BlacklistedWordsBot?label=Lines%20of%20code) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue)
+[![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.0-green) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue)
 
 BWB is a Discord.js bot for handling auto moderation of words in a blacklist, deleting them and logging them to the audit log.
 
