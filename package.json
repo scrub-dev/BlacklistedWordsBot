@@ -10,6 +10,7 @@
   "author": "Scrub",
   "license": "MIT",
   "dependencies": {
+    "better-sqlite3": "^7.1.1",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
     "sql-template-strings": "^2.2.2",
