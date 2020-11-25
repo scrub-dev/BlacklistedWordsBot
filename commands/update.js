@@ -1,8 +1,7 @@
 const Discord = require('discord.js')
-const { checkPermission, noPermissionMessage, successMessage, userError } = require('../util/utils.js')
 module.exports = {
-	name: 'remove',
-    description: 'remove a database value',
+	name: 'update',
+    description: 'update a database value',
     args: true,
 	execute(client,message,args) {
         switch(args[1].toLowerCase()){
@@ -15,6 +14,6 @@ module.exports = {
             default:
                 userError(message, "Argument not recognised, did you spell it correctly? (word | bypass | permission)")
                 break;
-        }
+        } 
     }
 };
