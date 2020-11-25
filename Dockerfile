@@ -5,6 +5,9 @@ WORKDIR /bot
 
 RUN npm install pm2 -g
 
+RUN apk add g++ make python
+RUN npm install node-gyp -g
+
 COPY package.json /bot
 RUN npm install
 

@@ -39,9 +39,7 @@ The bot is  still in a developmental phase and does currently not have all the s
 ## To Do:
 * Add the functionality required to be able to removed a bypass or blacklisted word
 * Create saftey and permission checks for  the ability to use commands such as
-    * Add Bypass
     * Remove Bypass
-    * Add Word
     * Remove Word
 * Create a server settings json file to store persistant data for server (Could just   include in config.json)
 * Server moderation level for all blacklistTypes
@@ -50,6 +48,7 @@ The bot is  still in a developmental phase and does currently not have all the s
 * Implement a better way to store data for the setActivity Function
 * Implement word severity check agaist server settings table
 * Possibly add more functionality towards making it a full feature generic discord bot
+* Look into adding detection of obfuscation for blacklisted words ie: # = h, 3 = e etc.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
