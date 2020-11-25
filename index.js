@@ -14,6 +14,10 @@ require('dotenv').config()
  *  > If the server wants to audit log every message deletion
  * implement a json file for the setActivity Function
  * implement word severity check agaist server settings table
+ * 
+ * Down the line:
+ * Weighted 1337 Symbol detection
+ *  > Check if the flagged word substitutes similar symbols ie: # = H, 7 = T, 3 = E etc.
  */
 let client = new Discord.Client()
 let token = process.env.TOKEN || config.bot.token
