@@ -1,5 +1,5 @@
 const Discord = require('discord.js')
-const { userError, returnTable, embedOutput } = require('../util/utils.js')
+const { userError, returnTable, embedOutput, checkPermission, noPermissionMessage } = require('../util/utils.js')
 module.exports = {
 	name: 'list',
     description: 'list current blacklisted words',
@@ -11,6 +11,7 @@ module.exports = {
         switch(args[1].toLowerCase()){
             case "word":
             case "words":
+                if(!checkPermission(client,message, 1)) return noPermissionMessage(message)
                 returnTable(client, client.dbConf.blacklistedWordsTbl).then((rows)=>{
                     rows.forEach((row) => {
                         output += `${row.word.charAt(0).toUpperCase() + row.word.slice(1)} ${row.blacklistType.charAt(0) + row.blacklistType.slice(1).toLowerCase()} ${row.severityLevel}\n`
@@ -20,6 +21,7 @@ module.exports = {
                 break;
             case "bypass":
             case "bypasses":
+                if(!checkPermission(client,message, 2)) return noPermissionMessage(message)
                 returnTable(client, client.dbConf.bypassTbl).then((rows)=>{
                     rows.forEach((row) => {
                         output += ` ${row.bypassType.charAt(0) + row.bypassType.slice(1).toLowerCase()} ${row.id}\n`
@@ -29,6 +31,7 @@ module.exports = {
                 break;
             case "permission":
             case "permissions":
+                if(!checkPermission(client,message, 3)) return noPermissionMessage(message)
                 returnTable(client, client.dbConf.permissionTbl).then((rows)=>{
                     rows.forEach((row) => {
                         output += `${client.users.cache.find(user => user.id === row.id).username} ${row.permissionLevel}\n`

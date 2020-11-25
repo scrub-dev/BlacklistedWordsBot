@@ -1,5 +1,19 @@
 
 # Change Log:
+## Version 1.4.0
+* Added Read functionality
+    * Command `{prefix} list [words | bypasses | permissions]`
+* Updated Readme with fancy image
+## Version 1.3.0
+* Bot Moderation Support added!
+    * Give other users access to the bots commands
+    * Allows for different levels of access
+        * Each level inherits the permissions of the level below it
+        * Any user with administrator permissions autimatically has permission level 3
+        * Level 1: CRUD for Blacklisted Words
+        * Level 2: CRUD for Bypasses
+        * Level 3: Crud for Bot Moderation permissions
+    * Fixed bug where number inaccuracies would cause bugs with parsing IDs as ints into the database
 ## Version 1.2.3
 * Added changelog
 ## Version 1.2.2
