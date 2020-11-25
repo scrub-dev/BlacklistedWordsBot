@@ -11,6 +11,10 @@ module.exports.checkPermission = (client, message, level) => {
     })
 }
 
+module.exports. randomArrayReturn = (resArr) => {
+    return resArr[Math.floor(Math.random()*resArr.length)]
+}
+
 module.exports.noPermissionMessage = (message) => {
     let embed = new Discord.MessageEmbed();
     embed.setTitle('❌ ERROR ❌').setDescription("***You don't have permission to use this command***").setColor("RED");

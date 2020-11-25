@@ -5,6 +5,7 @@ const responsesFile = require('./util/responses.json')
 const sqlite3 = require('sqlite3').verbose()
 const dbConf = config.database
 var db;
+const { randomArrayReturn } = require('./util/utils.js')
 require('dotenv').config()
 /**
  * TODO:
@@ -22,7 +23,6 @@ require('dotenv').config()
 let client = new Discord.Client()
 let token = process.env.TOKEN || config.bot.token
 client.login(token)
-//Load / Create / Connect to database
 try{
     if(!fs.existsSync(`./dbs/${dbConf.databaseName}.db`)){
         console.log(`[ INI ] Creating Database File`)
@@ -76,7 +76,8 @@ client.on('message', async message =>{
     await checkMessage(message).then(flag => {
         if(!flag) return;
         deleteMessage(message, "Blacklisted Word")
-        message.channel.send(randomArrayReturn(responsesFile.responses))
+        if(config.flags.responses) message.channel.send(randomArrayReturn(responsesFile.responses))
+
     })
     if(!message.content.startsWith(config.prefix)) return;
     let args = message.content.slice(config.prefix.length).trim().split(/ +/);
@@ -142,12 +143,10 @@ async function bypassCheck(message){
         
     })
 }
-function randomArrayReturn(resArr){
-
-    return resArr[Math.floor(Math.random()*resArr.length)]
-}
 setInterval(()=>{
-    let activities = ["Trans Rights", "On the belong server"]
-    let num = Math.floor(Math.random() * activities.length)
-    client.user.setActivity(activities[num],{type: "PLAYING"})
+    if(config.flags.activities){
+        let activities = ["Trans Rights", "On the belong server"]
+        let num = Math.floor(Math.random() * activities.length)
+        client.user.setActivity(activities[num],{type: "PLAYING"})
+    }
 }, 1000 * 60 * 5)

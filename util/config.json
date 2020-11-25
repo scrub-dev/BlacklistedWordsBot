@@ -10,5 +10,9 @@
         "blacklistedWordsTbl":"blacklistedWordsTbl",
         "bypassTbl":"bypassTbl",
         "permissionTbl": "permissionTbl"
+    },
+    "flags":{
+        "activitys":true,
+        "responses":true
     }
 }

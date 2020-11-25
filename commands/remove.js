@@ -13,7 +13,7 @@ module.exports = {
             case "permission":
                 break;
             default:
-                userError(message, "method not recognised, did you spell it correctly? (word | bypass | permission)")
+                userError(message, "Argument not recognised, did you spell it correctly? (word | bypass | permission)")
                 break;
         }
     }
