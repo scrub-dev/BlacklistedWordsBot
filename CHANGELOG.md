@@ -1,5 +1,11 @@
 
 # Change Log:
+## Version 1.6.0
+* Deletion now implemented
+    * Blacklisted Words based on Word
+    * Bypasses based on ID
+    * Permissions based on ID
+    * Full permissions implementation based on heirarchy, for example someone with level 1 cannot remove someone with level 3 access to the bot
 ## Version 1.5.0
 * Moved from sqlite3 library to better-sqlite
 * Refactored codebase to allow for better-sqlite to work
