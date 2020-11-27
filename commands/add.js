@@ -15,13 +15,13 @@ module.exports = {
                 let severity = parseInt(args[4])
 
                 if(!wordTypeArray.includes(wordType)) return message.channel.send("Invalid word filter type")
-                if(severity > 3 || severity < 1 || isNaN(severity)) return message.channel.send("Invalid Word Severity filter (Must be between either 1, 2 or 3")
+                if(severity > 3 || severity < 1 || isNaN(severity)) return message.channel.send("Invalid Word Severity filter (Must be between either 1, 2 or 3)")
 
                 if(!checkPermission(client,message, 1)) return noPermissionMessage(message)
                 let existquery = `SELECT EXISTS (SELECT word FROM ${client.dbConf.blacklistedWordsTbl} WHERE word = ? LIMIT 1)`
                 let existstmt = client.db.prepare(existquery)
                 let existres = existstmt.get(word)
-                if(existres[Object.keys(existres)[0]] !== 0) return userError(message, "Word alread in blacklist database")
+                if(existres[Object.keys(existres)[0]] !== 0) return userError(message, "Word already in blacklist database")
 
                 let addQuery = `INSERT INTO ${client.dbConf.blacklistedWordsTbl} VALUES (:word, :wordType, :wordSeverity)`
                 let addStmt = client.db.prepare(addQuery)
@@ -47,7 +47,7 @@ module.exports = {
                 let bypassExistsQuery = `SELECT EXISTS (SELECT id FROM ${client.dbConf.bypassTbl} WHERE id = ? LIMIT 1)`
                 let bypassExistsStmt = client.db.prepare(bypassExistsQuery)
                 let bypassExistsRes = bypassExistsStmt.get(id)
-                if(bypassExistsRes[Object.keys(bypassExistsRes)[0]] == 0) return message.channel.send(`Bypass does not exist`)
+                if(bypassExistsRes[Object.keys(bypassExistsRes)[0]] !== 0) return message.channel.send(`Bypass already not exist`)
 
                 let addBypassQuery = `INSERT INTO ${client.dbConf.bypassTbl} VALUES (:id,:bypassType)`
                 let addBypassStmt = client.db.prepare(addBypassQuery)
@@ -69,7 +69,7 @@ module.exports = {
                 if(permissionLevel > 3) return userError(message, "User permission level too high, please pick 1,2 or 3")
 
                 if(!checkPermission(client,message, 3)) return noPermissionMessage(message)
-                if(getUserPermissionLevel(client, message) <= permissionLevel ) return noPermissionMessage(message)
+                if(getUserPermissionLevel(client, message.member) <= permissionLevel ) return noPermissionMessage(message)
 
                 let permissionExistsQuery = `SELECT EXISTS (SELECT id FROM ${client.dbConf.permissionTbl} WHERE id = :id LIMIT 1)`
                 let permissionExistsStmt = client.db.prepare(permissionExistsQuery)

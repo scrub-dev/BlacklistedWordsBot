@@ -1,11 +1,15 @@
 
 # Change Log:
+## Version 1.7.0
+* Added update functionality to the bot
+    * Includes appropriate permission levels
+* Bug fixing for CRUD functions of permissions with permission handling
 ## Version 1.6.0
 * Deletion now implemented
     * Blacklisted Words based on Word
     * Bypasses based on ID
     * Permissions based on ID
-    * Full permissions implementation based on heirarchy, for example someone with level 1 cannot remove someone with level 3 access to the bot
+    * Full permissions implementation based on hierarchy, for example someone with level 1 cannot remove someone with level 3 access to the bot
 ## Version 1.5.0
 * Moved from sqlite3 library to better-sqlite
 * Refactored codebase to allow for better-sqlite to work
@@ -22,7 +26,7 @@
         * Any user with administrator permissions autimatically has permission level 3
         * Level 1: CRUD for Blacklisted Words
         * Level 2: CRUD for Bypasses
-        * Level 3: Crud for Bot Moderation permissions
+        * Level 3: CRUD for Bot Moderation permissions
     * Fixed bug where number inaccuracies would cause bugs with parsing IDs as ints into the database
 ## Version 1.2.3
 * Added changelog

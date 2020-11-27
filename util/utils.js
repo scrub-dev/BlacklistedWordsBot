@@ -14,6 +14,13 @@ module.exports.checkPermission = (client, message, level) => {
     return flag
 }
 
+module.exports.getCurrentTableEntry = (client,table,tableVal,value) => {
+    let query = `SELECT * FROM ${table} WHERE ${tableVal} = :x `
+    let stmt = client.db.prepare(query)
+    let res = stmt.get({x: value})
+    return res
+}
+
 module.exports. randomArrayReturn = (resArr) => {
     return resArr[Math.floor(Math.random()*resArr.length)]
 }
