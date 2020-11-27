@@ -1,27 +1,19 @@
-![Logo](/assets/name.png)
+![BlacklistedWordsBot-Logo](/assets/name.png)
 ---
 [![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.5-green) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue)
 
-BWB is a Discord.js bot for handling auto moderation of words in a blacklist, deleting them and logging them to the audit log.
-
+BWB is a Discord.js Discord bot for handling auto moderation of words in a blacklist, deleting them as well as handling bypass conditions.
 This bot allows for randomized responses to replace the blacklisted word/phrase as well as multiple bypass filters so it can ignore users based on user, roles and/or channels.
+With its own permission levels, you can assign different users different permissions levels to interact with the bot.
 
 This is more of a personal project because I got bored,  it might have bugs in it, feel free to drop an Issue and ill get around to fixing it in the next release. I do plan to support this for a while as I need to get back in the habit of programming. Thank you for taking interest in this bot.
 
 ## Quick Start:
-First off, drop your bot's token in `config.json bot.token`.
+First off, drop your bot's token in `config.json bot.token` or make a `.env` file in the root directory with `TOKEN=YOURTOKENHERE`.
 Contained in this version is a Json file (`blacklist.json`) with an array, fill this array with all the blocked words you want to delete when users type them. Obviously this does not update when a new word is added so I would suggest using nodemon to restart when a file changes or pm2 --watch for the same effect. Node is good for getting up and going straight away.
 `node index.js`
 `nodemon index.js`
-`pm2 start index.js --watch`
-
-## Allowing bypasses:
-You might not want  everyone to be affected by this bot. In the `config.json` there are 3 methods for bypassing its blacklist check. All work off ID's.
-* User bypass: checks the user id against the userBypass array.
-* Role bypass: checks the users roles against the roleBypass array.
-* Channel bypass: turns off the checks for any channel in the channelBypass array.
-
-These all work on ID's of each type and not the names!
+`pm2 start index.js`
 
 ## Docker:
 If you want to run the bot in a Docker Container, you now can! Included is the dockerfile to create an image of this bot. Before building the image, please open the file and set your bots token here 
@@ -34,13 +26,9 @@ then you can either run it through command line or create a container or
 Docker Desktop.
 
 ## To Note:
-The bot is  still in a developmental phase and does currently not have all the safety  checks or permission checks in place to be used on community servers. As such any user can add a bypass or blacklisted word.
+The bot is almost ready for a full production release, expect certain features not to be fully implemented yet and a few bugs along the way.
 
 ## To Do:
-* Add the functionality required to be able to removed a bypass or blacklisted word
-* Create saftey and permission checks for  the ability to use commands such as
-    * Remove Bypass
-    * Remove Word
 * Create a server settings json file to store persistant data for server (Could just   include in config.json)
 * Server moderation level for all blacklistTypes
     * If the server wants responses when the message is removed by the bot
@@ -48,7 +36,8 @@ The bot is  still in a developmental phase and does currently not have all the s
 * Implement a better way to store data for the setActivity Function
 * Implement word severity check agaist server settings table
 * Possibly add more functionality towards making it a full feature generic discord bot
-* Look into adding detection of obfuscation for blacklisted words ie: # = h, 3 = e etc.
+* Look into adding detection of obfuscation for blacklisted words ie: # = h, 3 = e etc
+* Complete documentation for bot
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
