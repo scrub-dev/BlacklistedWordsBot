@@ -1,5 +1,5 @@
 const Discord = require('discord.js')
-const { checkPermission, noPermissionMessage, successMessage, userError } = require('../util/utils.js')
+const { checkPermission, noPermissionMessage, successMessage, userError, getUserPermissionLevel } = require('../util/utils.js')
 module.exports = {
 	name: 'add',
     description: 'add a database value',
@@ -44,11 +44,10 @@ module.exports = {
                 if(/[^0-9]/.test(id)) return message.channel.send("ID must be numbers only")
 
                 if(!checkPermission(client,message, 2)) return noPermissionMessage(message)
-
                 let bypassExistsQuery = `SELECT EXISTS (SELECT id FROM ${client.dbConf.bypassTbl} WHERE id = ? LIMIT 1)`
                 let bypassExistsStmt = client.db.prepare(bypassExistsQuery)
                 let bypassExistsRes = bypassExistsStmt.get(id)
-                if(bypassExistsRes[Objects.keys(bypassExistsRes)[0]] !== 0) return message.channel.send(`Bypass already exists`)
+                if(bypassExistsRes[Object.keys(bypassExistsRes)[0]] == 0) return message.channel.send(`Bypass does not exist`)
 
                 let addBypassQuery = `INSERT INTO ${client.dbConf.bypassTbl} VALUES (:id,:bypassType)`
                 let addBypassStmt = client.db.prepare(addBypassQuery)
@@ -70,10 +69,11 @@ module.exports = {
                 if(permissionLevel > 3) return userError(message, "User permission level too high, please pick 1,2 or 3")
 
                 if(!checkPermission(client,message, 3)) return noPermissionMessage(message)
+                if(getUserPermissionLevel(client, message) <= permissionLevel ) return noPermissionMessage(message)
 
                 let permissionExistsQuery = `SELECT EXISTS (SELECT id FROM ${client.dbConf.permissionTbl} WHERE id = :id LIMIT 1)`
                 let permissionExistsStmt = client.db.prepare(permissionExistsQuery)
-                let permissionExistsRes = permissionExistsStmt.get({id: id})
+                let permissionExistsRes = permissionExistsStmt.get({id: permissionID})
                 if(permissionExistsRes[Object.keys(permissionExistsRes)[0]] !== 0) return userError(message, `Permission already exists`)
 
                 let addPermissionQuery = `INSERT INTO ${client.dbConf.permissionTbl} VALUES (:id,:level)`

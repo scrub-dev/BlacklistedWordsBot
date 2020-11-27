@@ -1,12 +1,16 @@
 const Discord = require("discord.js");
 
-module.exports.checkPermission = (client, message, level) => {
-    if(message.member.hasPermission("ADMINISTRATOR")) return true;
-    let permissionQuery = `SELECT id, permissionLevel FROM ${client.dbConf.permissionTbl} WHERE id  = :id LIMIT 1`
+module.exports.getUserPermissionLevel = (client, member) => {
+    if(member.hasPermission("ADMINISTRATOR")) return 4
+    let permissionQuery = `SELECT id, permissionLevel FROM ${client.dbConf.permissionTbl} WHERE id = :id LIMIT 1`
     let stmt = client.db.prepare(permissionQuery)
-    let res = stmt.get({id: message.member.id})
-    if(res == undefined) return false
-    let flag = (res.permissionLevel >= level)? true : false
+    let res = stmt.get({id: member.id})
+    if(res === undefined) return 0
+    else return res.permissionLevel
+}
+
+module.exports.checkPermission = (client, message, level) => {
+    let flag = (this.getUserPermissionLevel(client,message.member) >= level)? true : false
     return flag
 }
 

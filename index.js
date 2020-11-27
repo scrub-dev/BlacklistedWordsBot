@@ -39,9 +39,10 @@ try{
     //id: channelID | roleID | userID bypassType: "USER" | "CHANNEL" | "ROLE".
     /**
      * Permission Levels:
-     * 1: Add and remove / update words from blacklist
-     * 2: Add and remove / update bypasses
-     * 3: Add and remove / update permissions
+     * 1: CRUD words from blacklist
+     * 2: CRUD bypasses
+     * 3: CRUD permission levels 1 and 2
+     * 4: CRUD permission levels 1, 2 and 3 (Cannot Assign, user must have admin flag set)
      */
 }catch(error){
     console.log(`[ERROR] Database: ${error}`)

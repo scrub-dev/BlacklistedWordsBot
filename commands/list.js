@@ -38,10 +38,17 @@ module.exports = {
             case "permissions":
                 if(!checkPermission(client,message, 3)) return noPermissionMessage(message)
                 returnTable(client, client.dbConf.permissionTbl).then((rows)=>{
+                    output = ""
+                    let hiddenAdminUsers = client.users.cache.filter(user => message.guild.member(user).hasPermission("ADMINISTRATOR") && !user.bot) // Will always be 1, Owner of server
+                    hiddenAdminUsers.each(user => {
+                        output += `${user.username}#${user.discriminator} 4\n`
+                    })
                     if(rows.length !== 0){
-                        output = ""
                         rows.forEach((row) => {
-                            output += `${client.users.cache.find(user => user.id === row.id).username} ${row.permissionLevel}\n`
+                            if(!hiddenAdminUsers.get(row.id)){
+                                let permissionUser = client.users.cache.find(user => user.id === row.id)
+                                output += `${permissionUser.username}#${permissionUser.discriminator} ${row.permissionLevel}\n`
+                            }
                         }) 
                     }
                     embedOutput(message, name, output)

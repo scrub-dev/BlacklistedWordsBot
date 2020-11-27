@@ -34,13 +34,14 @@ then you can either run it through command line or create a container or
 Docker Desktop.
 
 ## To Note:
-The bot is  still in a developmental phase and does currently not have all the safety  checks or permission checks in place to be used on community servers. As such any user can add a bypass or blacklisted word.
+The bot is almost ready for a full production release
 
 ## To Do:
-* Add the functionality required to be able to removed a bypass or blacklisted word
+* Add the functionality required to be able to remove a bypass, blacklisted word or permission
 * Create saftey and permission checks for  the ability to use commands such as
     * Remove Bypass
     * Remove Word
+    * Remove Permission
 * Create a server settings json file to store persistant data for server (Could just   include in config.json)
 * Server moderation level for all blacklistTypes
     * If the server wants responses when the message is removed by the bot
