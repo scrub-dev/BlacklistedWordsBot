@@ -1,6 +1,6 @@
 ![BlacklistedWordsBot-Logo](/assets/name.png)
 ---
-[![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.5-green) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue)
+[![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.7-green) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue)
 
 BWB is a Discord.js Discord bot for handling auto moderation of words in a blacklist, deleting them as well as handling bypass conditions.
 This bot allows for randomized responses to replace the blacklisted word/phrase as well as multiple bypass filters so it can ignore users based on user, roles and/or channels.
@@ -25,8 +25,13 @@ To build the bot image simply type in the root directory of the repo
 then you can either run it through command line or create a container or
 Docker Desktop.
 
-## To Note:
-The bot is almost ready for a full production release, expect certain features not to be fully implemented yet and a few bugs along the way.
+## Documentation
+- [Configuration](./docs/config.md)
+- [Troubleshooting](./docs/troubleshooting.md)
+- [Commands](./docs/commands.md)
+- [Blacklisted Words](./docs/blacklisted-words.md)
+- [Bypasses](./docs/bypasses.md)
+- [Bot Access Levels](./docs/moderation-permissions.md)
 
 ## To Do:
 * Create a server settings json file to store persistant data for server (Could just   include in config.json)

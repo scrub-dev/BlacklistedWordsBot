@@ -1,5 +1,7 @@
 
 # Change Log:
+## Version 1.7.1
+* Added [Documentation](./docs)
 ## Version 1.7.0
 * Added update functionality to the bot
     * Includes appropriate permission levels
