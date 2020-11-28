@@ -49,6 +49,7 @@ permissionLevel = Integer value:{1,2,3}
 Flags are hard-coded values that allow the user running the bot on a machine to change the bahaviour of the bot.
 ### Flag: activites
 Allows the Bot to display an Activity every 5 minutes (picked at random from array).
+
 ![activities-example](./images/setActivityExample.PNG)
 
 ### Flag: responses
