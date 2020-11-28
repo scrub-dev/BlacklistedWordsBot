@@ -42,8 +42,10 @@ Make sure to enter a valid token. you can do it a few ways.
     1. If it is a Bot Application, upder Token next to the bots username, click copy.
 #### Adding the token to the application Method 1:
 1. Go to [./util/config.json](../util/config.json)
-![Token-Location](./images/configTokenLocation.png)
 1. In the `""` add your bot token and save, run the application again.
+
+![Token-Location](./images/configTokenLocation.PNG)
+
 
 #### Adding the token to the application Method 2:
 1. Create a file called `.env`
@@ -54,7 +56,8 @@ Make sure to enter a valid token. you can do it a few ways.
 With docker, you should be able to use [method 1](#Adding-the-token-to-the-application-Method-1:) listed above.
 
 Alternitively, open the [Dockerfile](../Dockerfile) find `ENV TOKEN=YOURTOKENHERE` and replace `YOURTOKENHERE` with your bots token.
-![Token-Location](./images/dockerfileTokenLocation.png)
+
+![Token-Location](./images/dockerFileTokenLocation.PNG)
 
 
 
