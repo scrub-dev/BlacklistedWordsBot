@@ -65,3 +65,15 @@ module.exports.getTableRowCount = (db, table) => {
     let res = stmt.all()
     return res.length
 }
+module.exports.regexStringBuilder = (word) => {
+    let wordArr = word.split("")
+    let x = ""
+    wordArr.forEach(e => {
+        x += `[${e}]+`
+    })
+    return x
+}
+
+module.exports.removeDuplicateCharacters = (word) => {
+    return word.toLowerCase().replace(/(.)\1+/g, '$1')
+}
