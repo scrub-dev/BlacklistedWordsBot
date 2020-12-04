@@ -58,7 +58,7 @@ module.exports = {
                 successMessage(message, `${args[3]} Bypass added for: ${id}`)
                 break;
             case "permission":
-                if(args.length < 4) return userError(message, `ncorrect amount of arguments (add permission id level)`)
+                if(args.length < 4) return userError(message, `Incorrect amount of arguments (add permission id level)`)
 
                 let permissionID = args[2]
                 let permissionLevel = parseInt(args[3])
