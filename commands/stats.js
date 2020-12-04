@@ -10,6 +10,7 @@ module.exports = {
         embed.addField(":robot: Bot Stats :robot:", 
         `**Memory Usage**: ${(((process.memoryUsage().heapUsed)/1024)/1024).toFixed(0)}Mb
         **Uptime**: ${new Date(Math.floor(process.uptime()) * 1000).toISOString().substr(11,8)}
+        **Ping**: ${client.ws.ping}Ms
         **Bot Version**: ${config.bot.botVer}`,true)
         embed.addField(":desktop: System Stats :desktop:", 
         `**Platform**: ${process.platform}

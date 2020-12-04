@@ -30,9 +30,10 @@ module.exports.createTables = (db, dbConf) => {
     console.log(`[ DB ] Creating Access Permissions Table`)
 
     let options = {
-        "responses":0,
-        "activity":1,
-        "ObfuscationCheck":0,
+        "responses":0, //Bool
+        "activity":1, //Bool
+        "ObfuscationCheck":0, //Bool
+        "blacklistFilterLevel": 0 //Int 0 > n > 4
     }
     db.exec(`CREATE TABLE IF NOT EXISTS botConfig (name TEXT, value INT)`)
     console.log(`[ DB ] Creating Bot Options Table`)

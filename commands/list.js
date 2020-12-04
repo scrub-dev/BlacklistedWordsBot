@@ -54,6 +54,18 @@ module.exports = {
                     embedOutput(message, name, output)
                 })
                 break;
+            case "botoptions":
+            case "botoption":
+            case "options":
+                if(!checkPermission(client,message, 3)) return noPermissionMessage(message)
+                returnTable(client, "botConfig").then((rows) => {
+                    output = ""
+                    rows.forEach(element => {
+                        output += `${element.name.charAt(0).toUpperCase() + element.name.slice(1).toLowerCase()} : ${element.value}\n`
+                    })
+                    embedOutput(message, "Bot Options", output)
+                })
+                break;
             default:
                 userError(message, "Argument not recognised, did you spell it correctly? (word | bypass | permission)")
                 return;

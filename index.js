@@ -12,7 +12,8 @@ require('./util/databaseSetup.js')
 require('dotenv').config()
 /**
  * TODO:
- * create a server settings json file to store persistant data for server (Could just include in config.json)
+ * create a server settings
+ * dynamically change bot settings
  *  > Server moderation level for all blacklistTypes
  *  > If the server wants responses when the message is removed by the bot
  *  > If the server wants to audit log every message deletion
