@@ -8,7 +8,6 @@ const dbConf = config.database
 let db = undefined;
 
 const {getTableRowCount, randomArrayReturn, regexStringBuilder, removeDuplicateCharacters, getCurrentTableEntry, deobfuscateWord} = require('./util/utils.js')
-const { resolveSoa } = require('dns')
 require('./util/databaseSetup.js')
 require('dotenv').config()
 /**
@@ -16,6 +15,11 @@ require('dotenv').config()
  *  > Server moderation level for all blacklistTypes
  *  > If the server wants to audit log every message deletion
  * implement word severity check agaist server settings table
+ * 
+ * Create SmartDetect Functionality
+ *  > Using Tensorflow Toxcicity Model
+ *  > Enable with Bot Options
+ *  > allows for smart detect of toxic messages to be deleted.
  * 
   */
 let client = new Discord.Client()

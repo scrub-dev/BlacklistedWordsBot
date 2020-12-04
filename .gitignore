@@ -1,3 +1,4 @@
 #Ignore my token for the testing bot
 /dbs/*
 .env
+test.js

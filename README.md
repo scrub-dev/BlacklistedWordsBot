@@ -38,15 +38,12 @@ Docker Desktop.
 - [Bot Access Levels](./docs/moderation-permissions.md)
 
 ## To Do:
-* Create a server settings json file to store persistant data for server (Could just   include in config.json)
 * Server moderation level for all blacklistTypes
     * If the server wants responses when the message is removed by the bot
     * If the server wants to audit log every message deletion
 * Implement a better way to store data for the setActivity Function
 * Implement word severity check agaist server settings table
-* Possibly add more functionality towards making it a full feature generic discord bot
-* Look into adding detection of obfuscation for blacklisted words ie: # = h, 3 = e etc
-* Complete documentation for bot
 
+* Add SmartDetection Feature using Machine Learning Model + Tensorflow
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

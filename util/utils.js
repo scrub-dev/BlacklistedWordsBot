@@ -61,9 +61,9 @@ module.exports.returnTable = async (client, table) => {
 }
 
 module.exports.getTableRowCount = (db, table) => {
-    let stmt = db.prepare(`SELECT * FROM ${table}`)
-    let res = stmt.all()
-    return res.length
+    let stmt = db.prepare(`SELECT count(*) FROM ${table}`)
+    let res = stmt.get()
+    return res[Object.keys(res)[0]]
 }
 module.exports.regexStringBuilder = (word,client) => {
     let duplicateRes = this.getCurrentTableEntry(client, "botConfig", "name", "duplicateCharCheck")
