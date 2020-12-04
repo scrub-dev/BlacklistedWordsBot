@@ -1,5 +1,15 @@
 
 # Change Log:
+## Version 1.8
+* Added Regex checker for flagged words
+    * ooooooofffffffff and oof get picked up as the same word so you only have to have one entry in the blacklisted words database.
+* Added "leet" Character detection
+    * 00f and oof are picked up as the same so you only need one entry in the blacklisted words database (# = h, $ = s etc.).
+* Added Stats command
+    * Allows you to view bot stats, system stats and server stats
+* Activity and Responses now enabled/disabled while running though botOptions Command.
+* Create module files to neated up database creation and connection process.
+* Created more module functions to increase readability in core files.
 ## Version 1.7.1
 * Added [Documentation](./docs)
 ## Version 1.7.0

@@ -46,11 +46,24 @@ permissionLevel = Integer value:{1,2,3}
 ```
 
 ## Flags
-Flags are hard-coded values that allow the user running the bot on a machine to change the bahaviour of the bot.
-### Flag: activites
-Allows the Bot to display an Activity every 5 minutes (picked at random from array).
+Flags are stored in the botConfig table in the database, these values allow you to enable / disable certain features of the bot while it is running!
+`{prefix}botoptions` to access these features, required access level 3
 
+Flags can be enabled / diabled by added a 1 or 0 respectively to the command.
+`{prefix}botoptions {flag} {1 | 0}`
+
+### Flag: activity
+Allows the bot to display an activity, view the image below. Change the array it picks from at random in index.js at the bottom of the file.
 ![activities-example](./images/setActivityExample.PNG)
 
 ### Flag: responses
 When the bot detects a word on the blacklist, it will delete the message sent by the user. If this flag is set, it will also respond with a message picked at random in an array found [Here](../util/responses.json).
+
+### Flag: duplicatecharcheck
+Checks if a user tries to get around the bot by adding more characters to the blacklisted word.
+
+### Flag: obfustactioncheck
+This allows the bot to check if someone has used "leet" characters in their message.
+
+### Flag: filterlevel
+This takes more then a `{1 | 0}` value, it can take 1,2 or 3 as a value and sets the filter level of the bot.

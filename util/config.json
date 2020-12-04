@@ -1,7 +1,7 @@
 {
     "bot":{
         "botName":"Blacklisted Word bot by Scrub",
-        "botVer":"1.7.1",
+        "botVer":"1.8",
         "token":""
     },
     "prefix":">",

@@ -6,6 +6,10 @@ BWB is a Discord.js Discord bot for handling auto moderation of words in a black
 This bot allows for randomized responses to replace the blacklisted word/phrase as well as multiple bypass filters so it can ignore users based on user, roles and/or channels.
 With its own permission levels, you can assign different users different permissions levels to interact with the bot.
 
+This bot features clever detection functions that allow for it to check for obfuscation of a word. this includes multiple characters and obfuscation through using "leet" character replacments.
+For example: DB Entry(oof) would detect `oof, 00f, oooooooooo00000fffffffffphphphphph`
+The downside of this is that `of` would also be detected, this is why there is an option to disable either or both of the checks. Read the config documentation for the bot to see which flags you want enabled.
+
 This is more of a personal project because I got bored,  it might have bugs in it, feel free to drop an Issue and ill get around to fixing it in the next release. I do plan to support this for a while as I need to get back in the habit of programming. Thank you for taking interest in this bot.
 
 ## Quick Start:

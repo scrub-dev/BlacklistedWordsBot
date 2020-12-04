@@ -19,7 +19,7 @@ module.exports = {
                     name: "activity",
                     value: newActivityVal
                 })
-                successMessage(message, `Activity value changed! Was ${(currentActivityVal)? "Enabled" : "Disabled"} Now ${(newActivityVal)? "Enabled" : "Disabled"}`)
+                successMessage(message, `Activity value changed! Was ${(currentActivityVal.value)? "Enabled" : "Disabled"} Now ${(newActivityVal)? "Enabled" : "Disabled"}`)
                 break;
             case "responses":
                 let currentResponseVal = getCurrentTableEntry(client, "botConfig", "name", "responses")
@@ -29,21 +29,33 @@ module.exports = {
                 let responseStmt = client.db.prepare(updateResponsesQuery)
                 responseStmt.run({
                     name: "responses",
-                    value: newResponsesVal
+                    value: newResponseVal
                 })
                 successMessage(message, `Responses value changed! Was ${(currentResponseVal)? "Enabled" : "Disabled"} Now ${(newResponseVal)? "Enabled" : "Disabled"}`)
                 break;
             case "obfuscationcheck":
                 let currentObfuscationVal = getCurrentTableEntry(client, "botConfig", "name", "obfuscationCheck")
                 let newObfuscationVal = parseInt(args[2])
-                if(currentVal.value === newVal) return userError(message, "Already set to that value!")
+                if(currentObfuscationVal.value === newObfuscationVal) return userError(message, "Already set to that value!")
                 let updateObfuscationCheckQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let obfuscationStmt = client.db.prepare(updateObfuscationCheckQuery)
                 obfuscationStmt.run({
                     name:"obfuscationCheck",
                     value: newObfuscationVal
                 })
-                successMessage(message, `ObfuscationCheck value changed! Was ${(currentObfuscationVal)? "Enabled" : "Disabled"} Now ${(newObfuscationVal)? "Enabled" : "Disabled"}`)
+                successMessage(message, `ObfuscationCheck value changed! Was ${(currentObfuscationVal.value)? "Enabled" : "Disabled"} Now ${(newObfuscationVal)? "Enabled" : "Disabled"}`)
+                break;
+            case "duplicatecharcheck":
+                let currentDupeVal = getCurrentTableEntry(client, "botConfig", "name", "duplicateCharCheck")
+                let newDupeVal = parseInt(args[2])
+                if(currentDupeVal.value === newDupeVal) return userError(message, "Already set to that value!")
+                let updateDupeCheckQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
+                let dupeStmt = client.db.prepare(updateDupeCheckQuery)
+                dupeStmt.run({
+                    name:"duplicateCharCheck",
+                    value: newDupeVal
+                })
+                successMessage(message, `duplicateCharCheck value changed! Was ${(currentDupeVal.value)? "Enabled" : "Disabled"} Now ${(newDupeVal)? "Enabled" : "Disabled"}`)
                 break;
             case "filterlevel":
                 let currentFilterVal = getCurrentTableEntry(client, "botConfig", "name", "blacklistFilterLevel")
@@ -56,7 +68,7 @@ module.exports = {
                     name: "blacklistFilterLevel",
                     value: newFilterVal
                 })
-                successMessage(message, `Filter value changed! Was ${(currentFilterVal)? "Enabled" : "Disabled"} Now ${(newfilterVal)? "Enabled" : "Disabled"}`)
+                successMessage(message, `Filter value changed! Was ${(currentFilterVal.value)? "Enabled" : "Disabled"} Now ${(newfilterVal)? "Enabled" : "Disabled"}`)
                 break;
             default:
                 return userError(messasge, "Unknown argument, did you spell it correctly?")

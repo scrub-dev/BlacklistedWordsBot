@@ -5,25 +5,19 @@ const responsesFile = require('./util/responses.json')
 const Database = require('better-sqlite3')
 const { dbExists, createDB, dbConnection, createTables } = require('./util/databaseSetup')
 const dbConf = config.database
-var db;
+let db = undefined;
 
-const {getTableRowCount, randomArrayReturn, regexStringBuilder, removeDuplicateCharacters} = require('./util/utils.js')
+const {getTableRowCount, randomArrayReturn, regexStringBuilder, removeDuplicateCharacters, getCurrentTableEntry, deobfuscateWord} = require('./util/utils.js')
+const { resolveSoa } = require('dns')
 require('./util/databaseSetup.js')
 require('dotenv').config()
 /**
  * TODO:
- * create a server settings
- * dynamically change bot settings
  *  > Server moderation level for all blacklistTypes
- *  > If the server wants responses when the message is removed by the bot
  *  > If the server wants to audit log every message deletion
- * implement a json file for the setActivity Function
  * implement word severity check agaist server settings table
  * 
- * Down the line:
- * Weighted 1337 Symbol detection
- *  > Check if the flagged word substitutes similar symbols ie: # = H, 7 = T, 3 = E etc.
- */
+  */
 let client = new Discord.Client()
 let token = process.env.TOKEN || config.bot.token
 client.login(token)
@@ -36,11 +30,12 @@ try{
     }else{
         db = dbConnection(dbName)
     }
+    client.db = db
     /**
      * Permission Levels:
      * 1: CRUD words from blacklist
      * 2: CRUD bypasses
-     * 3: CRUD permission levels 1 and 2
+     * 3: CRUD permission levels 1 and 2, Set/View/Change Bot Options
      * 4: CRUD permission levels 1, 2 and 3 (Cannot Assign, user must have admin flag set)
      */
 }catch(error){
@@ -76,12 +71,12 @@ client.on('message', async message =>{
         await checkMessage(message).then(flag => {
             if(!flag) return;
             deleteMessage(message, "Blacklisted Word")
-            if(config.flags.responses) message.channel.send(randomArrayReturn(responsesFile.responses))
+            let res = getCurrentTableEntry(client, "botConfig", "name", "responses")
+            if(res.value) message.channel.send(randomArrayReturn(responsesFile.responses))
         })
     }else{
         let args = message.content.slice(config.prefix.length).trim().split(/ +/);
         let command = args[0]
-        client.db = db
         client.dbConf = dbConf
         if(!client.commands.has(command)) return;
         try{
@@ -109,7 +104,12 @@ async function checkBlacklist(wordArr){
     return new Promise(resolve => {
         let flag = false
         wordArr.forEach((element, index) => {
-            let x = removeDuplicateCharacters(element)
+            let duplicateRes = getCurrentTableEntry(client, "botConfig", "name", "duplicateCharCheck")
+            if(duplicateRes.value) element = removeDuplicateCharacters(element)
+
+            let deobfuscateRes = getCurrentTableEntry(client, "botConfig", "name", "obfuscationCheck")
+            if(deobfuscateRes.value) element = deobfuscateWord(element)
+
             db.function('regexp', (regExp,strVal) => {
                 let x = new RegExp(regExp, 'gi')
                 if(strVal.match(x)) return 1
@@ -117,7 +117,7 @@ async function checkBlacklist(wordArr){
             })
             let qry = `SELECT EXISTS (SELECT word FROM ${dbConf.blacklistedWordsTbl} WHERE word REGEXP :regex )`
             let stmt = db.prepare(qry)
-            let res = stmt.get({regex: regexStringBuilder(x)})
+            let res = stmt.get({regex: regexStringBuilder(element,client)})
             if(res[Object.keys(res)[0]] != 0) flag = true
             if(index == wordArr.length - 1) resolve(flag)
         })
@@ -146,11 +146,10 @@ async function bypassCheck(message){
     })
 }
 setInterval(()=>{
-        let stmt = db.prepare(`SELECT value FROM botConfig WHERE name = :name`)
-        let res = stmt.get({name: "activity"})
-        if(res.value){
-            let activities = ["Trans Rights", "On the belong server"]
-            let num = Math.floor(Math.random() * activities.length)
-            client.user.setActivity(activities[num],{type: "PLAYING"})
+    let res = getCurrentTableEntry(client, "botConfig", "name", "activity")
+    if(res.value){
+        let activities = ["Trans Rights", "On the belong server"]
+        let num = Math.floor(Math.random() * activities.length)
+        client.user.setActivity(activities[num],{type: "PLAYING"})
         }
 }, 15 * 1000)

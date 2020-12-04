@@ -14,8 +14,8 @@ module.exports.checkPermission = (client, message, level) => {
     return flag
 }
 
-module.exports.getCurrentTableEntry = (client,table,tableVal,value) => {
-    let query = `SELECT * FROM ${table} WHERE ${tableVal} = :x `
+module.exports.getCurrentTableEntry = (client,table,columnName,value) => {
+    let query = `SELECT * FROM ${table} WHERE ${columnName} = :x`
     let stmt = client.db.prepare(query)
     let res = stmt.get({x: value})
     return res
@@ -65,15 +65,94 @@ module.exports.getTableRowCount = (db, table) => {
     let res = stmt.all()
     return res.length
 }
-module.exports.regexStringBuilder = (word) => {
-    let wordArr = word.split("")
-    let x = ""
-    wordArr.forEach(e => {
-        x += `[${e}]+`
-    })
-    return x
+module.exports.regexStringBuilder = (word,client) => {
+    let duplicateRes = this.getCurrentTableEntry(client, "botConfig", "name", "duplicateCharCheck")
+    if(duplicateRes.value){
+        let wordArr = word.split("")
+        let x = ""
+        wordArr.forEach(e => {
+            e = escapeRegExp(e)
+            x += `[${e}]+`
+        })
+        return x
+    }else{
+        return escapeRegExp(word)
+    }
 }
 
 module.exports.removeDuplicateCharacters = (word) => {
+    word = escapeRegExp(word)
     return word.toLowerCase().replace(/(.)\1+/g, '$1')
+}
+
+module.exports.deobfuscateWord = (word) => {
+    word = escapeRegExp(word)
+    let leetArr = {
+        "1":"i",
+        "2":"z",
+        "3":"e",
+        "4":"a",
+        "5":"s",
+        "6":"b",
+        "7":"t",
+        "8":"b",
+        "9":"g",
+        "0":"o",
+        "\@":"a",
+        "\/\\\\":"a",
+        "Д":"a",
+        "а":"a",
+        "в":"b",
+        "ь":"b",
+        "ß":"b",
+        "©":"c",
+        "¢":"c",
+        "с":"c",
+        "\\\|\\\)":"d",
+        "е":"e",
+        "€":"e",
+        "£":"e",
+        "ph":"f",
+        "ƒ":"f",
+        "н":"h",
+        "#":"h",
+        "!":"i",
+        "\|":"i",
+        "\|\<":"k",
+        "м":"m",
+        "/\\\/\\\\":"m",
+        "\(V\)":"m",
+        "п":"n",
+        "и":"n",
+        "И":"n",
+        "\/V":"n",
+        "ө":"o",
+        "о":"o",
+        "Ø":"o",
+        "р":"p",
+        "kw":"q",
+        "®":"r",
+        "Я":"r",
+        "§":"ss",
+        "$":"s",
+        "т":"t",
+        "\\\/":"v",
+        "\\\/\\\/":"w",
+        "Ш":"w",
+        "%":"x",
+        "Ж":"x",
+        "у":"y",
+        "ү":"y",
+        "Ч":"y",
+        "¥":"y"
+    }
+    for(let char in leetArr){
+        if(word.includes(char)){
+            word = word.replace(new RegExp(escapeRegExp(char), "g"), leetArr[char])
+        }
+    }
+    return word
+}
+function escapeRegExp(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
