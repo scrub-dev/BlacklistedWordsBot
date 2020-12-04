@@ -145,9 +145,11 @@ async function bypassCheck(message){
     })
 }
 setInterval(()=>{
-    if(config.flags.activities){
-        let activities = ["Trans Rights", "On the belong server"]
-        let num = Math.floor(Math.random() * activities.length)
-        client.user.setActivity(activities[num],{type: "PLAYING"})
-    }
-}, 1000 * 60 * 5)
+        let stmt = db.prepare(`SELECT value FROM botConfig WHERE name = :name`)
+        let res = stmt.get({name: "activity"})
+        if(res.value){
+            let activities = ["Trans Rights", "On the belong server"]
+            let num = Math.floor(Math.random() * activities.length)
+            client.user.setActivity(activities[num],{type: "PLAYING"})
+        }
+}, 15 * 1000)

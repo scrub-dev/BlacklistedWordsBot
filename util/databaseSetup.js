@@ -31,8 +31,8 @@ module.exports.createTables = (db, dbConf) => {
 
     let options = {
         "responses":0,
-        "activity":0,
-        "ObfuscationCheck":0
+        "activity":1,
+        "ObfuscationCheck":0,
     }
     db.exec(`CREATE TABLE IF NOT EXISTS botConfig (name TEXT, value INT)`)
     console.log(`[ DB ] Creating Bot Options Table`)
