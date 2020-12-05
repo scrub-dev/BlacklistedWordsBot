@@ -2,3 +2,5 @@
 /dbs/*
 .env
 test.js
+removeDB.bat
+node_modules/
