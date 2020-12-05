@@ -3,4 +3,4 @@
 .env
 test.js
 removeDB.bat
-node_modules/
+node_modules
