@@ -3,6 +3,7 @@
 Smart detect uses a Tensorflow JS model as well as tensorflow istelf to determine the intentions of a message.
 
 SmartDetect is turned off by default
+
 The Default SmartDetectThreshold is 8
 
 To Enable / Disable smart detect:
