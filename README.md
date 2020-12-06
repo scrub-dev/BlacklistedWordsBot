@@ -1,6 +1,8 @@
 ![BlacklistedWordsBot-Logo](/assets/name.png)
 ---
-[![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.7-green) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue)
+[![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.9.0-green) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue)
+
+##### NOW WITH MACHINE LEARNING!!! ( Check out the Smart Detect feature )
 
 BWB is a Discord.js Discord bot for handling auto moderation of words in a blacklist, deleting them as well as handling bypass conditions.
 This bot allows for randomized responses to replace the blacklisted word/phrase as well as multiple bypass filters so it can ignore users based on user, roles and/or channels.
@@ -14,7 +16,7 @@ This is more of a personal project because I got bored,  it might have bugs in i
 
 ## Quick Start:
 First off, drop your bot's token in `config.json bot.token` or make a `.env` file in the root directory with `TOKEN=YOURTOKENHERE`.
-Contained in this version is a Json file (`blacklist.json`) with an array, fill this array with all the blocked words you want to delete when users type them. Obviously this does not update when a new word is added so I would suggest using nodemon to restart when a file changes or pm2 --watch for the same effect. Node is good for getting up and going straight away.
+You will need to install the modules required for this bot, do to this run `npm install` if there are any issues with the install check the troubleshooting documentation. Obviously this does not update when a new word is added so I would suggest using nodemon to restart when a file changes or pm2 --watch for the same effect. Node is good for getting up and going straight away.
 `node index.js`
 `nodemon index.js`
 `pm2 start index.js`
@@ -36,6 +38,7 @@ Docker Desktop.
 - [Blacklisted Words](./docs/blacklisted-words.md)
 - [Bypasses](./docs/bypasses.md)
 - [Bot Access Levels](./docs/moderation-permissions.md)
+- [Smart Detect](./docs/smart-detect.md)
 
 ## To Do:
 * Server moderation level for all blacklistTypes
@@ -43,7 +46,5 @@ Docker Desktop.
     * If the server wants to audit log every message deletion
 * Implement a better way to store data for the setActivity Function
 * Implement word severity check agaist server settings table
-
-* Add SmartDetection Feature using Machine Learning Model + Tensorflow
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

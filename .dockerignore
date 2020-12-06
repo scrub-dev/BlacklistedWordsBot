@@ -5,3 +5,4 @@ node_modules/*
 dbs/*
 *.md
 .github
+package-lock.json

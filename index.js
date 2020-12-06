@@ -7,21 +7,17 @@ const { dbExists, createDB, dbConnection, createTables } = require('./util/datab
 const dbConf = config.database
 let db = undefined;
 
-const {getTableRowCount, randomArrayReturn, regexStringBuilder, removeDuplicateCharacters, getCurrentTableEntry, deobfuscateWord} = require('./util/utils.js')
+const {getTableRowCount, randomArrayReturn, regexStringBuilder, removeDuplicateCharacters, getCurrentTableEntry, deobfuscateWord, fixTFJSInstall, embedOutput} = require('./util/utils.js')
 require('./util/databaseSetup.js')
 require('dotenv').config()
+fixTFJSInstall() // Fixes the install location of the DLL for tensorflow bindings in v6
 /**
  * TODO:
  *  > Server moderation level for all blacklistTypes
  *  > If the server wants to audit log every message deletion
  * implement word severity check agaist server settings table
  * 
- * Create SmartDetect Functionality
- *  > Using Tensorflow Toxcicity Model
- *  > Enable with Bot Options
- *  > allows for smart detect of toxic messages to be deleted.
- * 
-  */
+ */
 let client = new Discord.Client()
 let token = process.env.TOKEN || config.bot.token
 client.login(token)
@@ -78,6 +74,34 @@ client.on('message', async message =>{
             let res = getCurrentTableEntry(client, "botConfig", "name", "responses")
             if(res.value) message.channel.send(randomArrayReturn(responsesFile.responses))
         })
+        let smartDetectEnabled = getCurrentTableEntry(client, "botConfig", "name", "smartDetect")
+        let smartDetectThreshold = getCurrentTableEntry(client, "botConfig", "name", "smartDetectThreshold")
+        if(smartDetectEnabled.value){
+            const smartDetect = require('./util/smartDetect.js')
+            smartDetect.checkContent(message, smartDetectThreshold.value).then(predObj => {
+                let detectionCount = 0
+                let detections = []
+                for(let x in predObj){
+                    if(predObj[x]) {
+                        detectionCount++
+                        detections.push(x)
+                    }
+                }
+                if(detectionCount > 1){
+                    try{
+                        deleteMessage(message, "SmartDetect Detection")
+                        let embed = new Discord.MessageEmbed();
+                        embed.setTitle("SmartDetect")
+                        let detectionsStr = "**Dectected Toxic languge, message removed!**\n The message was flagged under:\n"
+                        detections.forEach((e,i) => { detectionsStr += `${i+1}/${detections.length} : ${e.charAt(0).toUpperCase() + e.slice(1)}\n`})
+                        embed.setDescription(detectionsStr)
+                        message.channel.send(embed)
+                    }catch(error){
+                        return;
+                    }
+                }
+            })
+        }
     }else{
         let args = message.content.slice(config.prefix.length).trim().split(/ +/);
         let command = args[0]

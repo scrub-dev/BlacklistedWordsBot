@@ -1,7 +1,7 @@
 {
     "bot":{
         "botName":"Blacklisted Word bot by Scrub",
-        "botVer":"1.8",
+        "botVer":"1.9",
         "token":""
     },
     "prefix":">",
@@ -10,9 +10,5 @@
         "blacklistedWordsTbl":"blacklistedWordsTbl",
         "bypassTbl":"bypassTbl",
         "permissionTbl": "permissionTbl"
-    },
-    "flags":{
-        "activites":true,
-        "responses":true
     }
 }

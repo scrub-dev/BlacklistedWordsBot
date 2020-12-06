@@ -34,7 +34,9 @@ module.exports.createTables = (db, dbConf) => {
         "activity":0, //Bool
         "obfuscationCheck":0, //Bool
         "duplicateCharCheck":0, // Bool
-        "blacklistFilterLevel": 0 //Int 0 > n > 4
+        "blacklistFilterLevel": 0, //Int 0 > n > 4
+        "smartDetect" : 0, // Bool
+        "smartDetectThreshold" : 8 // 0 > n > 10
     }
     db.exec(`CREATE TABLE IF NOT EXISTS botConfig (name TEXT, value INT)`)
     console.log(`[ DB ] Creating Bot Options Table`)

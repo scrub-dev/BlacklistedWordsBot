@@ -10,6 +10,8 @@
   "author": "Scrub",
   "license": "MIT",
   "dependencies": {
+    "@tensorflow-models/toxicity": "1.2.2",
+    "@tensorflow/tfjs-node": "2.6.0",
     "better-sqlite3": "^7.1.1",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",

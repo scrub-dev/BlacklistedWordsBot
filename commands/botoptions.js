@@ -12,6 +12,7 @@ module.exports = {
             case "activity":
                 let currentActivityVal = getCurrentTableEntry(client, "botConfig", "name", "activity")
                 let newActivityVal = parseInt(args[2])
+                if(newActivityVal != 0 || newActivityVal != 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
                 if(currentActivityVal.value === newActivityVal) return userError(message, "Already set to that value!")
                 let updateActivityQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let activityStmt = client.db.prepare(updateActivityQuery)
@@ -24,6 +25,7 @@ module.exports = {
             case "responses":
                 let currentResponseVal = getCurrentTableEntry(client, "botConfig", "name", "responses")
                 let newResponseVal = parseInt(args[2])
+                if(newResponseVal != 0 || newResponseVal != 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
                 if(currentResponseVal.value === newResponseVal) return userError(message, "Already set to that value!")
                 let updateResponsesQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let responseStmt = client.db.prepare(updateResponsesQuery)
@@ -36,6 +38,7 @@ module.exports = {
             case "obfuscationcheck":
                 let currentObfuscationVal = getCurrentTableEntry(client, "botConfig", "name", "obfuscationCheck")
                 let newObfuscationVal = parseInt(args[2])
+                if(newObfuscationVal != 0 || newObfuscationVal != 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
                 if(currentObfuscationVal.value === newObfuscationVal) return userError(message, "Already set to that value!")
                 let updateObfuscationCheckQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let obfuscationStmt = client.db.prepare(updateObfuscationCheckQuery)
@@ -48,6 +51,7 @@ module.exports = {
             case "duplicatecharcheck":
                 let currentDupeVal = getCurrentTableEntry(client, "botConfig", "name", "duplicateCharCheck")
                 let newDupeVal = parseInt(args[2])
+                if(newDupeVal != 0 || newDupeVal != 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
                 if(currentDupeVal.value === newDupeVal) return userError(message, "Already set to that value!")
                 let updateDupeCheckQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let dupeStmt = client.db.prepare(updateDupeCheckQuery)
@@ -69,6 +73,32 @@ module.exports = {
                     value: newFilterVal
                 })
                 successMessage(message, `Filter value changed! Was ${(currentFilterVal.value)? "Enabled" : "Disabled"} Now ${(newfilterVal)? "Enabled" : "Disabled"}`)
+                break;
+            case "smartdetect":
+                let currentSDVal = getCurrentTableEntry(client, "botConfig", "name", "smartDetect")
+                let newSDVal = parseInt(args[2])
+                if(newSDVal != 0 || newSDVal != 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
+                if(currentSDVal.value === newSDVal) return userError(message, "Already set to that value!")
+                let updateSDQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
+                let SDStmt = client.db.prepare(updateSDQuery)
+                SDStmt.run({
+                    name:"smartDetect",
+                    value: newSDVal
+                })
+                successMessage(message, `SmartDetect value changed! Was ${(currentSDVal.value)? "Enabled" : "Disabled"} Now ${(newSDVal)? "Enabled" : "Disabled"}`)
+                break;
+            case "smartdetectthreshold":
+                let currentSDTVal = getCurrentTableEntry(client, "botConfig", "name", "smartDetectThreshold")
+                let newSDTVal = parseInt(args[2])
+                if(newSDTVal > 10 || newSDTVal < 0) return userError(message, "Invalid value, must be between 0 and 10")
+                if(currentSDTVal.value === newSDTVal) return userError(message, "Already set to that value!")
+                let updateSDTQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
+                let SDTStmt = client.db.prepare(updateSDTQuery)
+                SDTStmt.run({
+                    name:"smartDetectThreshold",
+                    value: newSDTVal
+                })
+                successMessage(message, `SmartDetectThreshold value changed! Was ${(currentSDTVal.value)? "Enabled" : "Disabled"} Now ${(newSDTVal)? "Enabled" : "Disabled"}`)
                 break;
             default:
                 return userError(messasge, "Unknown argument, did you spell it correctly?")
