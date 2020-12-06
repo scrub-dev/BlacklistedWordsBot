@@ -1,6 +1,6 @@
 ![BlacklistedWordsBot-Logo](/assets/name.png)
 ---
-[![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.9.0-green) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue)
+[![social](https://img.shields.io/badge/Social-Twitter-blue)](https://twitter.com/scrub_fps) ![version](https://img.shields.io/badge/Version-1.9.0-green) ![discordVer](https://img.shields.io/badge/Discord.js-%5E12.3.1-blue) ![loc](https://img.shields.io/tokei/lines/github/Scott-Donaldson/BlacklistedWordsBot?label=Lines%20of%20code)
 
 ##### NOW WITH MACHINE LEARNING!!! ( Check out the Smart Detect feature )
 
@@ -16,9 +16,10 @@ This is more of a personal project because I got bored,  it might have bugs in i
 
 ## Quick Start:
 First off, drop your bot's token in `config.json bot.token` or make a `.env` file in the root directory with `TOKEN=YOURTOKENHERE`.
-You will need to install the modules required for this bot, do to this run `npm install` if there are any issues with the install check the troubleshooting documentation. Obviously this does not update when a new word is added so I would suggest using nodemon to restart when a file changes or pm2 --watch for the same effect. Node is good for getting up and going straight away.
-`node index.js`
-`nodemon index.js`
+You will need to install the modules required for this bot, do to this run `npm install` if there are any issues with the install check the troubleshooting documentation.
+Navigate to the documentation for commands to start adding words!
+`node .`
+`nodemon .`
 `pm2 start index.js`
 
 ## Docker:
