@@ -1,5 +1,11 @@
 
 # Change Log:
+## Version 1.9
+* Added SmartDetect using Machine Learning
+    * Using Tensorflow the bot can now detect the intention of a message, meaning you can delete a message if it is toxic / insulting etc.
+    * You can enable, disable SmartDetect
+    * You can set the sensitivity threshold for SmartDetect
+* There is a high chance now with this tensorflow implementation that the dockerfile will no longer work, this will be rectified in an upcoming release.
 ## Version 1.8
 * Added Regex checker for flagged words
     * ooooooofffffffff and oof get picked up as the same word so you only have to have one entry in the blacklisted words database.
