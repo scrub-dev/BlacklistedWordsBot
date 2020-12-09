@@ -101,7 +101,7 @@ module.exports = {
                 successMessage(message, `SmartDetectThreshold value changed! Was ${(currentSDTVal.value)? "Enabled" : "Disabled"} Now ${(newSDTVal)? "Enabled" : "Disabled"}`)
                 break;
             default:
-                return userError(messasge, "Unknown argument, did you spell it correctly?")
+                return userError(message, "Unknown argument, did you spell it correctly?")
         }
 	}
 };

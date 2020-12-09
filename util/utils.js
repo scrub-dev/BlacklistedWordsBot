@@ -158,12 +158,14 @@ function escapeRegExp(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 module.exports.fixTFJSInstall = () => {
-    if(!fs.existsSync(`./node_modules/@tensorflow/tfjs-node/lib/napi-v6/tensorflow.dll`)){
-        console.log('[ INI ] Fixing Tensorflow Install')
-        let oldDir = './node_modules/@tensorflow/tfjs-node/deps/lib/tensorflow.dll'
-        let newDir =  './node_modules/@tensorflow/tfjs-node/lib/napi-v6/tensorflow.dll'
-        fs.rename(oldDir,newDir, (err) => {
-            if(err) throw err
-        })
+    if(process.platform === "win32"){
+        if(!fs.existsSync(`./node_modules/@tensorflow/tfjs-node/lib/napi-v6/tensorflow.dll`)){
+            console.log('[ INI ] Fixing Tensorflow Install')
+            let oldDir = './node_modules/@tensorflow/tfjs-node/deps/lib/tensorflow.dll'
+            let newDir =  './node_modules/@tensorflow/tfjs-node/lib/napi-v6/tensorflow.dll'
+            fs.rename(oldDir,newDir, (err) => {
+                if(err) throw err
+            })
+        }
     }
 }
