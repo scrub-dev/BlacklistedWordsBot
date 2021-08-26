@@ -12,7 +12,8 @@ module.exports = {
             case "activity":
                 let currentActivityVal = getCurrentTableEntry(client, "botConfig", "name", "activity")
                 let newActivityVal = parseInt(args[2])
-                if(newActivityVal !== 0 || newActivityVal !== 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
+                console.log(newActivityVal != 1)
+                if(newActivityVal != 0 && newActivityVal != 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
                 if(currentActivityVal.value === newActivityVal) return userError(message, "Already set to that value!")
                 let updateActivityQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let activityStmt = client.db.prepare(updateActivityQuery)
@@ -25,7 +26,7 @@ module.exports = {
             case "responses":
                 let currentResponseVal = getCurrentTableEntry(client, "botConfig", "name", "responses")
                 let newResponseVal = parseInt(args[2])
-                if(newResponseVal != 0 || newResponseVal != 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
+                if(newResponseVal != 0 && newResponseVal != 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
                 if(currentResponseVal.value === newResponseVal) return userError(message, "Already set to that value!")
                 let updateResponsesQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let responseStmt = client.db.prepare(updateResponsesQuery)
@@ -36,9 +37,10 @@ module.exports = {
                 successMessage(message, `Responses value changed! Was ${(currentResponseVal)? "Enabled" : "Disabled"} Now ${(newResponseVal)? "Enabled" : "Disabled"}`)
                 break;
             case "obfuscationcheck":
+                console.log(parseInt(args[2]))
                 let currentObfuscationVal = getCurrentTableEntry(client, "botConfig", "name", "obfuscationCheck")
                 let newObfuscationVal = parseInt(args[2])
-                if(newObfuscationVal !== 0 || newObfuscationVal !== 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
+                if(newObfuscationVal !== 0 && newObfuscationVal !== 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
                 if(currentObfuscationVal.value === newObfuscationVal) return userError(message, "Already set to that value!")
                 let updateObfuscationCheckQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let obfuscationStmt = client.db.prepare(updateObfuscationCheckQuery)
@@ -51,7 +53,7 @@ module.exports = {
             case "duplicatecharcheck":
                 let currentDupeVal = getCurrentTableEntry(client, "botConfig", "name", "duplicateCharCheck")
                 let newDupeVal = parseInt(args[2])
-                if(newDupeVal !== 0 || newDupeVal !== 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
+                if(newDupeVal !== 0 && newDupeVal !== 1) return userError(message, "Invalid value, please only use 0 for  off, 1 for on")
                 if(currentDupeVal.value === newDupeVal) return userError(message, "Already set to that value!")
                 let updateDupeCheckQuery = `UPDATE botConfig SET value = :value WHERE name = :name`
                 let dupeStmt = client.db.prepare(updateDupeCheckQuery)
